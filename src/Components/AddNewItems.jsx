@@ -175,16 +175,16 @@ const AddNewItems = () => {
           marginTop: "20px",
         }}
       >
-        <Button color="primary" variant="outlined" onClick={onSubmit}>
+        <Button color="primary" variant="solid" onClick={onSubmit}>
           {" "}
           {id ? "Update Item" : "Add Item"}   
         </Button>
-        <Button color="danger" variant="outlined" onClick={onReset}>
+        <Button color="danger" variant="solid" onClick={onReset}>
           Reset
         </Button>
         <Button
-          color="danger"
-          variant="outlined"
+          color="default"
+          variant="solid"
           onClick={() => navigate("/items/allitems")}
         >
           Canel
