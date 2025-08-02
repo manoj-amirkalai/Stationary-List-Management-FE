@@ -127,7 +127,7 @@ const AddNewItems = () => {
         onInput={onChangeItem}
         placeholder="Item name"
       />
-      <Typography.Title level={5}><span style={{color:"white"}}>Item Quantity/span</span></Typography.Title>
+      <Typography.Title level={5}><span style={{color:"white"}}>Item Quantity</span></Typography.Title>
       <Input
         name="quantity"
         value={newItem.quantity}
