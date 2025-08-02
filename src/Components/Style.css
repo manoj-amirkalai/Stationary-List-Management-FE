@@ -1,0 +1,22 @@
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #282c34;
+  width: 100vw;
+  padding: 1vw 0;
+}
+.navbar_list{
+  color: white !important;
+  font-size: 1.2rem;  
+  cursor: pointer;
+  margin-top: 20px;
+  text-decoration: none;
+}
+.active{
+  color: white !important;
+  font-weight: bold;
+  border: 2px solid grey;
+  padding: 5px;
+  border-radius: 10px;
+}
