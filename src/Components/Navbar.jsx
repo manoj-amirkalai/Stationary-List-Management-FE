@@ -1,7 +1,9 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import "./Style.css";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 const Navbar = () => {
+  const { admin } = useSelector((state) => state.store);
   const location = useLocation();
   const [active, setActive] = useState(location.pathname.split("/")[2]);
   return (
@@ -15,7 +17,7 @@ const Navbar = () => {
           active === "availableitems" ? `navbar_list active` : "navbar_list"
         }
       >
-        Available Items
+        Available
       </Link>
       <Link
         to="/items/availablesoon"
@@ -44,32 +46,30 @@ const Navbar = () => {
         onClick={() => {
           setActive("allitems");
         }}
-        className={
-          active === "allitems" ? `navbar_list active` : "navbar_list"
-        }
+        className={active === "allitems" ? `navbar_list active` : "navbar_list"}
       >
-        All Items
+        Items
       </Link>
-      <Link
-        to="/items/addnewitem"
-        onClick={() => {
-          setActive("addnewitem");
-        }}
-        className={
-          active === "addnewitem" ? `navbar_list active` : "navbar_list"
-        }
-      >
-        Add New Item
-      </Link>
-
+      {admin && (
+        <Link
+          to="/items/addnewitem"
+          onClick={() => {
+            setActive("addnewitem");
+          }}
+          className={
+            active === "addnewitem" ? `navbar_list active` : "navbar_list"
+          }
+        >
+          Add New Item
+        </Link>
+      )}
       <Link
         to="/items/admin"
         onClick={() => {
           setActive("admin");
         }}
-        className={
-          active === "admin" ? `navbar_list active` : "navbar_list"
-        }admin
+        className={active === "admin" ? `navbar_list active` : "navbar_list"}
+        admin
       >
         Admin
       </Link>

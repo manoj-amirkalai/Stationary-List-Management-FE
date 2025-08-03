@@ -2,21 +2,39 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: #282c34;
+  background-color: #282c34a2;
   width: 100vw;
   padding: 1vw 0;
 }
-.navbar_list{
+.navbar_list {
   color: white !important;
-  font-size: 1.2rem;  
+  font-size: 1.2rem;
   cursor: pointer;
   margin-top: 20px;
   text-decoration: none;
 }
-.active{
+.active {
   color: white !important;
   font-weight: bold;
   border: 2px solid grey;
   padding: 5px;
   border-radius: 10px;
 }
+
+@media screen and (max-width: 600px) {
+  .welcome-page {
+    margin-top: 250px !important;
+  }
+  .navbar{
+    
+    padding: 10px 0 !important;
+  }
+  .navbar_list {
+    font-size: 0.6rem;
+  }
+  .add-new-item {
+    width: 90vw !important;
+    padding: 5vh 5vw !important;
+  }
+}
+

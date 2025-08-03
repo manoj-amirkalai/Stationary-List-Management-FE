@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { API_URL } from "../constant";
 import { intialgetReducer } from "../Store/Slice";
+import "./Style.css"; 
 
 const AddNewItems = () => {
   const dispatch = useDispatch();
@@ -141,19 +142,16 @@ const AddNewItems = () => {
     }
   };
   return (
-    <div style={{ width: "50vw", padding: "5vh 25vw" }}>
+    <div style={{ width: "50vw", padding: "5vh 25vw" }} className="add-new-item">
       {contextHolder}
       <div
         style={{
-          backgroundColor: "#616264ff",
-          color: "white",
-          padding: "10px 20px 30px 20px",
+          backgroundColor: "#6162644f",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.8)",
+          padding: "1px 20px 30px 20px",
           borderRadius: "10px",
         }}
       >
-        <Typography.Title level={5}>
-          <span style={{ color: "white" }}>Add New Item</span>
-        </Typography.Title>
         <Typography.Title level={5}>
           <span style={{ color: "white" }}>Item Name</span>
         </Typography.Title>

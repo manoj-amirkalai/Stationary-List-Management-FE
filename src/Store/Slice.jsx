@@ -22,6 +22,12 @@ const storeSlice = createSlice({
     postLoader: false,
     putLoader: false,
     deleteLoader: false,
+    admin:false
+  },
+  reducers:{
+   adminLogIn:(state,action)=>{
+      state.admin = action.payload;
+   }
   },
   extraReducers: (builder) => {
     builder

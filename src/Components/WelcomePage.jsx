@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { intialgetReducer } from "../Store/Slice";
 import { useEffect } from "react";
 import { Button, notification, Spin } from "antd";
+import  './Style.css'
 
-const styles = {
+  const styles = {
+    
   container: {
     display: "flex",
     flexDirection: "column",
@@ -59,7 +61,7 @@ const WelcomePage = () => {
     });
   };
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="welcome-page">
       {contextHolder}
       <h2 style={styles.heading}>Welcome to My Stationary Shop</h2>
       <p style={styles.subtext}>

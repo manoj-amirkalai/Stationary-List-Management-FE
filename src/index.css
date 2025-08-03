@@ -1,6 +1,6 @@
-body{
-  margin: -20px 0 50px 0 ;
-  background-image:url('../src/assets/bg.jpeg') ;
+body {
+  margin: -20px 0 50px 0;
+  background-image: url('../src/assets/bg.jpeg');
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -8,15 +8,23 @@ body{
   background-color: rgb(77, 77, 77);
   width: 100vw;
 }
-h1{
+
+/* Updated h1 style */
+h1 {
   color: white;
   font-size: 2.5rem;
-  margin-top: 20px;
+  margin: 20px auto 0 auto; /* Auto left & right centers it */
   background-color: rgb(46, 47, 48);
   width: max-content;
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin-left: 43vw;
-  
+  text-align: center;
+}
+
+/* Responsive font size for mobile */
+@media screen and (max-width: 600px) {
+  h1 {
+    font-size: 20px !important;
+  }
 }

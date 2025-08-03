@@ -1,24 +1,28 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { notification, Popconfirm, Table } from "antd";
+import React, { useState, useRef } from "react";
+import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
+import { notification, Popconfirm, Table, Input, Button, Space } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../constant";
 import { useDispatch } from "react-redux";
 import { intialgetReducer } from "../Store/Slice";
+import "./Style.css";
 
 const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const rowIndexItems = items.map((item, index) => ({
     ...item,
     index: index + 1,
+    key: item._id,
   }));
 
   const [api, contextHolder] = notification.useNotification();
-   const openNotification = (pauseOnHover) => () => {
+  const openNotification = (pauseOnHover) => () => {
     api.open({
       message: "Deleting Item",
-      description: "Unable to Delete the item, please try again.",
+      description: "Unable to delete the item, please try again.",
       showProgress: true,
       pauseOnHover,
     });
@@ -27,101 +31,139 @@ const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
   const handleDeleteItem = async (id) => {
     try {
       const response = await axios.delete(`${API_URL}/deleteitem/${id}`);
-      if (response.data.status === 200  ) {
-        // Handle successful deletion, e.g., show notification or update state
+      if (response.data.status === 200) {
         console.log("Item deleted successfully");
-        // Optionally, you can dispatch an action to update the Redux store
-        // Dispatch the initial get reducer to fetch items
         dispatch(intialgetReducer());
       }
     } catch (error) {
-        openNotification(true)();
+      openNotification(true)();
       console.error("Error deleting item:", error);
-      // Handle error, e.g., show notification
     }
   };
+
+  // Search
+  const searchInput = useRef(null);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]?.toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+  });
 
   const columns = [
     {
       title: "S.No",
       dataIndex: "index",
       key: "index",
-      ellipsis: true,
-      width: quantityColumn ? 0.5 : 0.4, // Adjust width based on quantityColumn
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      ellipsis: true,
-      width: 4,
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      ...getColumnSearchProps("name"),
     },
-    {
+    priceColumn && {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      ellipsis: true,
-      width: 0.5,
-      hidden: !priceColumn,
+      sorter: (a, b) => a.price - b.price,
     },
-    {
+    quantityColumn && {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
-      ellipsis: true,
-      width: 0.6,
-      hidden: !quantityColumn,
+      sorter: (a, b) => a.quantity - b.quantity,
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      ellipsis: true,
-      width: 0.8,
     },
-    {
-      title: "",
-      dataIndex: "_id",
-      key: "_id",
-      ellipsis: true,
-      width: 0.5,
-      hidden: !edit,
-      render: (text, record) => {
-        return (
-          <span>
-      {contextHolder}
-            <EditOutlined
-              style={{ color: "blue", cursor: "pointer", marginRight: "10px" }}
-              onClick={() => {
-                navigate(`/items/edititem/${record._id}`);
-              }}
-            />
-
-            <Popconfirm
-              title="Delete the task"
-              description="Are you sure to delete this task?"
-              onConfirm={() => {
-                handleDeleteItem(record._id);
-              }}
-              okText="Yes"
-              cancelText="No"
-            >
-              {" "}
-              <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
-            </Popconfirm>
-          </span>
-        );
-      },
+    edit && {
+      title: "Actions",
+      key: "actions",
+      fixed: "right",
+      render: (_, record) => (
+        <>
+          {contextHolder}
+          <EditOutlined
+            style={{ color: "blue", cursor: "pointer", marginRight: "10px" }}
+            onClick={() => navigate(`/items/edititem/${record._id}`)}
+          />
+          <Popconfirm
+            title="Delete the item"
+            description="Are you sure to delete this item?"
+            onConfirm={() => handleDeleteItem(record._id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
+          </Popconfirm>
+        </>
+      ),
     },
-  ];
+  ].filter(Boolean);
 
   return (
-    <>
-      <h1>{name}</h1>
-      <div style={{ width: "90vw", marginTop: "25px", padding: "0 5vw" }}>
-        <Table columns={columns} dataSource={rowIndexItems} />
-      </div>
-    </>
+    <div style={{ width: "90vw", overflowX: "auto", marginTop: "25px", padding: "0 5vw" }}>
+      <Table
+        columns={columns}
+        dataSource={rowIndexItems}
+        scroll={{ x: "max-content" }}
+        pagination={{ pageSize: 10 }}
+      />
+    </div>
   );
 };
 
