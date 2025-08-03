@@ -46,5 +46,5 @@ const storeSlice = createSlice({
       });
   },
 });
-export const { addNewItem } = storeSlice.actions;
+export const { adminLogIn } = storeSlice.actions;
 export default storeSlice.reducer;

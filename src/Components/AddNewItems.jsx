@@ -107,13 +107,12 @@ const AddNewItems = () => {
       // Dispatch the action to add the new item
       if (!id) {
         try {
-          const response = await axios.post(`${API_URL}/postitem`, newItem);
-          console.log("Item posted successfully:", response.data);
+         await axios.post(`${API_URL}/postitem`, newItem);
           createNotification(true)();
           dispatch(intialgetReducer());
         } catch (error) {
           erroNotification(true)();
-          console.error("Error updating item:", error);
+          console.log("Error updating item:", error);
         }
       } else {
         try {

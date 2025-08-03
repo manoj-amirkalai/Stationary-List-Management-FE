@@ -4,11 +4,12 @@ import { notification, Popconfirm, Table, Input, Button, Space } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../constant";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { intialgetReducer } from "../Store/Slice";
 import "./Style.css";
 
 const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
+  const {admin} = useSelector((state) => state.store);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -130,7 +131,7 @@ const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
       dataIndex: "status",
       key: "status",
     },
-    edit && {
+    (edit && admin) && {
       title: "Actions",
       key: "actions",
       fixed: "right",
@@ -156,7 +157,7 @@ const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
   ].filter(Boolean);
 
   return (
-    <div style={{ width: "90vw", overflowX: "auto", marginTop: "25px", padding: "0 5vw" }}>
+    <div style={{ width: "90vw", overflowX: "auto", marginTop: "25px", padding: "0 5vw" }} className="items-table">
       <Table
         columns={columns}
         dataSource={rowIndexItems}

@@ -21,6 +21,13 @@
   border-radius: 10px;
 }
 
+
+@media screen and (min-width: 1000px) {
+  .items-table{
+    width: 60vw !important;
+    margin-left:15vw !important;
+  }
+}
 @media screen and (max-width: 600px) {
   .welcome-page {
     margin-top: 250px !important;
