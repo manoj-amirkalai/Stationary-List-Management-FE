@@ -53,10 +53,18 @@ const AddNewItems = () => {
       pauseOnHover,
     });
   };
-   const erroNotification = (pauseOnHover) => () => {
+   const errorNotification = (pauseOnHover) => () => {
     api.open({
       message: "Unable to Add Item or Update Item",
       description: "Please try again.",
+      showProgress: true,
+      pauseOnHover,
+    });
+  };
+     const duplicateNotification = (pauseOnHover) => () => {
+    api.open({
+      message: "Duplicate Item",
+      description: "Item already added in List.",
       showProgress: true,
       pauseOnHover,
     });
@@ -111,7 +119,11 @@ const AddNewItems = () => {
           createNotification(true)();
           dispatch(intialgetReducer());
         } catch (error) {
-          erroNotification(true)();
+          if(error.response.data.duplicate) {
+            duplicateNotification(true)();
+          }else{
+          errorNotification(true)();
+          }
           console.log("Error updating item:", error);
         }
       } else {
@@ -126,7 +138,7 @@ const AddNewItems = () => {
           updateNotification(true)();
           dispatch(intialgetReducer());
         } catch (error) {
-          erroNotification(true)();
+          errorNotification(true)();
           console.error("Error updating item:", error);
         }
       }
