@@ -5,7 +5,7 @@ body{
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
-  background-color: aqua;
+  background-color: rgb(77, 77, 77);
   width: 100vw;
 }
 h1{

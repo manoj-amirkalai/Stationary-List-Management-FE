@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { intialgetReducer } from "../Store/Slice";
-
+import { useEffect } from "react";
+import { Button, notification, Spin } from "antd";
 
 const styles = {
   container: {
@@ -11,17 +12,17 @@ const styles = {
     fontFamily: "Arial, sans-serif",
     textAlign: "center",
     padding: "0 20px",
-    marginTop: "400px"
+    marginTop: "400px",
   },
   heading: {
     fontSize: "3rem",
     color: "#333",
-    marginBottom: "20px"
+    marginBottom: "20px",
   },
   subtext: {
     fontSize: "1.2rem",
     color: "black",
-    marginBottom: "30px"
+    marginBottom: "30px",
   },
   button: {
     padding: "12px 24px",
@@ -30,27 +31,55 @@ const styles = {
     color: "white",
     border: "none",
     borderRadius: "5px",
-    cursor: "pointer"
-  }
+    cursor: "pointer",
+  },
 };
 
 const WelcomePage = () => {
-  const  items  = useSelector((state) => state.store.items);
+  const { getLoader } = useSelector((state) => state.store);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-    // Dispatch the initial get reducer to fetch items
+  // Dispatch the initial get reducer to fetch items
+  useEffect(() => {
     dispatch(intialgetReducer());
-    return (
+  }, []);
+  useEffect(() => {
+    if (getLoader) {
+      openNotification(true)();
+    }
+  }, [getLoader]);
+
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (pauseOnHover) => () => {
+    api.open({
+      message: "Fetching Data",
+      description: "Please wait,Getting Data From Store.",
+      showProgress: true,
+      pauseOnHover,
+    });
+  };
+  return (
     <div style={styles.container}>
+      {contextHolder}
       <h2 style={styles.heading}>Welcome to My Stationary Shop</h2>
       <p style={styles.subtext}>
         Discover a variety of quality stationery items for all your needs.
       </p>
-     { items.length > 0 &&  <button style={styles.button} onClick={()=>{
-      navigate("/items/availableitems");
-      }} >Explore Products</button>}
+      {getLoader ? (
+        <Spin size="large"></Spin>
+      ) : (
+        <Button
+          color="primary"
+          variant="solid"
+          onClick={() => {
+            navigate("/items/availableitems");
+          }}
+        >
+          Explore Products
+        </Button>
+      )}
     </div>
-  );;
+  );
 };
 
 export default WelcomePage;

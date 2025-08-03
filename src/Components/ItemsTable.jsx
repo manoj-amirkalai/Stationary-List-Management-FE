@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Table } from "antd";
+import { notification, Popconfirm, Table } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../constant";
@@ -14,19 +14,28 @@ const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
     index: index + 1,
   }));
 
+  const [api, contextHolder] = notification.useNotification();
+   const openNotification = (pauseOnHover) => () => {
+    api.open({
+      message: "Deleting Item",
+      description: "Unable to Delete the item, please try again.",
+      showProgress: true,
+      pauseOnHover,
+    });
+  };
+
   const handleDeleteItem = async (id) => {
     try {
       const response = await axios.delete(`${API_URL}/deleteitem/${id}`);
-      if (response.status === 200) {
+      if (response.data.status === 200  ) {
         // Handle successful deletion, e.g., show notification or update state
         console.log("Item deleted successfully");
         // Optionally, you can dispatch an action to update the Redux store
-        // dispatch(intialgetReducer());
+        // Dispatch the initial get reducer to fetch items
+        dispatch(intialgetReducer());
       }
-
-      // Dispatch the initial get reducer to fetch items
-      dispatch(intialgetReducer());
     } catch (error) {
+        openNotification(true)();
       console.error("Error deleting item:", error);
       // Handle error, e.g., show notification
     }
@@ -80,6 +89,7 @@ const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
       render: (text, record) => {
         return (
           <span>
+      {contextHolder}
             <EditOutlined
               style={{ color: "blue", cursor: "pointer", marginRight: "10px" }}
               onClick={() => {
@@ -87,12 +97,18 @@ const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
               }}
             />
 
-            <DeleteOutlined
-              style={{ color: "red", cursor: "pointer" }}
-              onClick={() => {
+            <Popconfirm
+              title="Delete the task"
+              description="Are you sure to delete this task?"
+              onConfirm={() => {
                 handleDeleteItem(record._id);
               }}
-            />
+              okText="Yes"
+              cancelText="No"
+            >
+              {" "}
+              <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
+            </Popconfirm>
           </span>
         );
       },
@@ -102,9 +118,10 @@ const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
   return (
     <>
       <h1>{name}</h1>
-    <div style={{ width: "90vw", marginTop: "25px", padding: "0 5vw" }}>
-      <Table columns={columns} dataSource={rowIndexItems} />
-    </div></>
+      <div style={{ width: "90vw", marginTop: "25px", padding: "0 5vw" }}>
+        <Table columns={columns} dataSource={rowIndexItems} />
+      </div>
+    </>
   );
 };
 
