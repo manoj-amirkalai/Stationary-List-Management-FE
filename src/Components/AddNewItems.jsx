@@ -35,7 +35,6 @@ const AddNewItems = () => {
     state.store.items.filter((item) => item._id === id)
   );
 
-  console.log("New Item:", newItem);
 
   const createNotification = (pauseOnHover) => () => {
     api.open({
@@ -128,17 +127,20 @@ const AddNewItems = () => {
         }
       } else {
         try {
-          const response = await axios.put(
+          await axios.put(
             `${API_URL}/putitem/${numberId}`,
             newItem
           );
-          console.log("Item updated successfully:", response.data);
 
           // Dispatch the initial get reducer to fetch items
           updateNotification(true)();
           dispatch(intialgetReducer());
         } catch (error) {
+          if(error.response.data.duplicate) {
+            duplicateNotification(true)();
+          }else{
           errorNotification(true)();
+          }
           console.error("Error updating item:", error);
         }
       }

@@ -33,7 +33,6 @@ const ItemsTable = ({ items, quantityColumn, priceColumn, name, edit }) => {
     try {
       const response = await axios.delete(`${API_URL}/deleteitem/${id}`);
       if (response.data.status === 200) {
-        console.log("Item deleted successfully");
         dispatch(intialgetReducer());
       }
     } catch (error) {

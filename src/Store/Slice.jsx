@@ -32,7 +32,6 @@ const storeSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(intialgetReducer.pending, (state) => {
-        console.log("Fetching items...");
         // Optionally, you can set a loading state here
         state.getLoader = true;
       })
